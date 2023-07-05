@@ -79,10 +79,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ad_db',
-        'USER': 'kookmin',
-        'PASSWORD': '12345',
-        'HOST': '100.96.104.7',
-        'PORT': '3306',
+        'USER': os.environ['USER'],
+        'PASSWORD': os.environ['PASSWORD'],
+        'HOST': os.environ['HOST'],
+        'PORT': os.environ['PORT'],
+        # 'USER' : 'kookmin',
+        # 'PASSWORD' : '12345',
+        # 'HOST' : '100.96.104.7',
+        # 'PORT' : '3306'
     }
 }
 
