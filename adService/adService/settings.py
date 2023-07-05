@@ -83,10 +83,6 @@ DATABASES = {
         'PASSWORD': os.environ['PASSWORD'],
         'HOST': os.environ['HOST'],
         'PORT': os.environ['PORT'],
-        # 'USER' : 'kookmin',
-        # 'PASSWORD' : '12345',
-        # 'HOST' : '100.96.104.7',
-        # 'PORT' : '3306'
     }
 }
 
