@@ -102,3 +102,12 @@ select{
     width:5%;
     height:70%;
 }
+.window-box{
+    width: 30%;
+    height: 70%;
+    border: 1px solid #ddd;
+    top:20%;
+    left:35%; 
+    position: absolute; 
+    display: none;
+}

@@ -38,6 +38,7 @@
               <th>action</th>
             </tr>
           </table>
+          <div class="window-box"></div>
     </div>
           
     <footer></footer>
@@ -95,7 +96,115 @@
             }
           });
         });
+        //예시
+        var data = [{
+            idx: 1234,
+            title: 1234,
+            text: "김길동",
+            exposure: "2023/06/26 00:00:00",
+            count: "2023/06/26 00:00:00",
+            regdate: "http"
+        },
+        {
+            idx: 5678,
+            title: 5678,
+            text: "고길동",
+            exposure: "2023/06/26 00:00:00",
+            count: "2023/06/26 00:00:00",
+            regdate: "http"
+        }]
 
+        var board = document.getElementById('board');
+
+        // 데이터 배열을 순회하며 행을 추가
+        data.forEach(function(item) {
+        
+          var row = document.createElement('tr');
+          
+          var idxCell = document.createElement('td');
+          idxCell.textContent = item.idx;
+          row.appendChild(idxCell);
+          
+          var titleCell = document.createElement('td');
+          titleCell.textContent = item.title;
+          row.appendChild(titleCell);
+          
+          var textCell = document.createElement('td');
+          textCell.textContent = item.text;
+          row.appendChild(textCell);
+          
+          var exposureCell = document.createElement('td');
+          exposureCell.textContent = item.exposure;
+          row.appendChild(exposureCell);
+          
+          var countCell = document.createElement('td');
+          countCell.textContent = item.count;
+          row.appendChild(countCell);
+          
+          var regdateCell = document.createElement('td');
+          regdateCell.textContent = item.regdate;
+          row.appendChild(regdateCell);
+          
+          var actionCell = document.createElement('td');
+          var detailBtn = document.createElement('button');
+          detailBtn.textContent = '상세';
+          detailBtn.classList.add(String(item.text));
+          actionCell.appendChild(detailBtn);
+          
+          
+          var editBtn = document.createElement('button');
+          editBtn.textContent = '수정';
+          actionCell.appendChild(editBtn);
+          
+          var deleteBtn = document.createElement('button');
+          deleteBtn.textContent = '삭제';
+          actionCell.appendChild(deleteBtn);
+          
+          row.appendChild(actionCell);
+          
+          board.appendChild(row);
+        });
+        data.forEach(function(item){
+          document.querySelector('.' + String(item.text)).addEventListener('click', function() {
+            var windowbox = document.querySelector('.window-box');
+            var board = document.querySelector("#board");
+            board.style.filter = 'blur(2px)';
+            windowbox.style.display = 'block';
+            windowbox.style.backgroundColor = 'black';
+            windowbox.style.color = "white";
+            
+            const container = document.createElement('div');
+            container.classList.add('data-container');
+
+            const idxElement = document.createElement('p');
+            idxElement.textContent = `  idx: ${item.idx}`;
+
+            const titleElement = document.createElement('h1');
+            titleElement.textContent = data.title;
+
+            const textElement = document.createElement('p');
+            textElement.textContent = data.text;
+
+            const exposureElement = document.createElement('p');
+            exposureElement.textContent = ` 노출일시: ${item.exposure}`;
+
+            const countElement = document.createElement('p');
+            countElement.textContent = `  조회수: ${item.count}`;
+
+            const regdateElement = document.createElement('p');
+            regdateElement.textContent = `  등록일시: ${item.regdate}`;
+
+            container.appendChild(idxElement);
+            container.appendChild(titleElement);
+            container.appendChild(textElement);
+            container.appendChild(exposureElement);
+            container.appendChild(countElement);
+            container.appendChild(regdateElement);
+
+            windowbox.appendChild(container);
+          });
+        });
+        //예시끝
         // 검색 버튼 클릭 시 이벤트 핸들러
         $('.search_button').click(function() {
           var searchType = $('#class').val();
