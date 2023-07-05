@@ -4,5 +4,5 @@ from .views import AdList
 
 
 urlpatterns = [
-    path('', AdList.as_view())
+    path('adList/', AdList.as_view())
 ]
