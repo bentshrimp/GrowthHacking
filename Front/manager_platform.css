@@ -1,0 +1,104 @@
+header{
+    height: 8%;
+    border: 1px solid gray;
+    margin: 0;
+}
+.buttons{
+    height: 8%;
+    border: 1px solid gray;
+    margin: 0;
+}
+.search{
+    height: 8%;
+    border: 1px solid gray;
+    margin: 0;
+}
+.main{
+    height: 66%;
+    border: 1px solid gray;
+    margin: 0;
+}
+footer{
+    height: 9%;
+    border: 1px solid gray;
+    margin: 0;
+}
+html,body{
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+}
+
+
+.area{
+    height: 15%;
+}
+.part-1, .part-2, .part-3, .part-4, .part-5, .part-6, .part-7{
+    height: 100%;
+    width: 14.28%;
+    margin: 0;
+    float: left;
+    text-align: center;
+    /* margin-left:auto; margin-right:auto; margin-top:auto; margin-bottom:auto; */
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left:auto;
+    margin-right:auto;
+  }
+ 
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+ 
+  th {
+    background-color: #f2f2f2;
+  }
+ 
+  .btn {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+ 
+  .btn:hover {
+    background-color: #45a049;
+  }
+
+  .add{
+    background-color : rgb(50, 112, 192);
+    color : white;
+    border : none;
+    width:45%;
+    height:90%
+}
+
+.ad_test{
+    background-color : rgb(53, 122, 53);
+    color : white;
+    border : none;
+
+    width:45%;
+    height:90%
+}
+.buttons{
+    text-align: center;
+}
+select{
+    width:20%;
+    height:70%;
+}
+.search_input{
+    width:70%;
+    height:70%;
+}
+.search_button{
+    width:5%;
+    height:70%;
+}

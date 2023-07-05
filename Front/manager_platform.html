@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="manager_platform.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <header align="center"><font size="6">AD Manager Platform - AD List</font></header>
+    <div class="buttons">
+        <button class="add">ADD</button>
+        <button class="ad_test">AD TEST</button>
+    </div>
+    <div class="search">
+        <select id="class">
+            <option value="type">검색타입</option>
+            <option value="1">idx</option>
+            <option value="2">title</option>
+            <option value="2">text</option>
+        </select>
+        <input type="text" class="search_input" placeholder="검색어를 입력하세요">
+        <button class="search_button">검색</button>
+    </div>
+    <div class="main">
+        <table id="board">
+            <tr>
+              <th>idx</th>
+              <th>title</th>
+              <th>text</th>
+              <th>exposure datetime</th>
+              <th>count</th>
+              <th>regdate</th>
+              <th>action</th>
+            </tr>
+          </table>
+    </div>
+          
+    <footer></footer>
+
+
+    <script>
+
+    //     function sendform()
+    //     {
+    //         // ajax , jquery 통해서 http:// .... / .. /../
+    //         // return json string 처리
+
+    //         var strResult = return_json();
+    //         // html .. display 
+            
+    //     }
+   
+    // function return_json() {
+    //     return {
+    //         idx: 1,
+    //         title: "현대자동차",
+    //         text: "아이오닉 이벤트",
+    //         exposure: "2023/06/26 00:00:00",
+    //         count: 1000,
+    //         regdate: "2023/05/05 12:00:00"
+    //     }
+    // }
+
+    var data = [{
+            idx: 1,
+            title: "현대자동차",
+            text: "아이오닉 이벤트",
+            exposure: "2023/06/26 00:00:00",
+            count: 1000,
+            regdate: "2023/05/05 12:00:00"
+        },
+        {
+            idx: 2,
+            title: "기아자동차",
+            text: "아이오닉 이벤트",
+            exposure: "2023/06/26 00:00:00",
+            count: 3000,
+            regdate: "2023/05/05 12:00:00"
+        }]
+
+    var board = document.getElementById('board');
+
+  // 데이터 배열을 순회하며 행을 추가
+    data.forEach(function(item) {
+    var row = document.createElement('tr');
+    
+    var idxCell = document.createElement('td');
+    idxCell.textContent = item.idx;
+    row.appendChild(idxCell);
+    
+    var titleCell = document.createElement('td');
+    titleCell.textContent = item.title;
+    row.appendChild(titleCell);
+    
+    var textCell = document.createElement('td');
+    textCell.textContent = item.text;
+    row.appendChild(textCell);
+    
+    var exposureCell = document.createElement('td');
+    exposureCell.textContent = item.exposure;
+    row.appendChild(exposureCell);
+    
+    var countCell = document.createElement('td');
+    countCell.textContent = item.count;
+    row.appendChild(countCell);
+    
+    var regdateCell = document.createElement('td');
+    regdateCell.textContent = item.regdate;
+    row.appendChild(regdateCell);
+    
+    var actionCell = document.createElement('td');
+    var detailBtn = document.createElement('button');
+    detailBtn.textContent = '상세';
+    actionCell.appendChild(detailBtn);
+    
+    var editBtn = document.createElement('button');
+    editBtn.textContent = '수정';
+    actionCell.appendChild(editBtn);
+    
+    var deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '삭제';
+    actionCell.appendChild(deleteBtn);
+    
+    row.appendChild(actionCell);
+    
+    board.appendChild(row);
+  });
+
+  // 검색 버튼 클릭 시 이벤트 핸들러
+  document.querySelector('.search_button').addEventListener('click', function() {
+    var searchType = document.getElementById('class').value;
+    var searchInput = document.querySelector('.search_input').value.toLowerCase();
+    searchTable(searchType, searchInput);
+  });
+  
+  // 검색어 입력란에서 Enter 키 입력 시 이벤트 핸들러
+  document.querySelector('.search_input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      var searchType = document.getElementById('class').value;
+      var searchInput = document.querySelector('.search_input').value.toLowerCase();
+      searchTable(searchType, searchInput);
+    }
+  });
+  
+  // 테이블 검색 기능
+  function searchTable(searchType, searchInput) {
+    var table = document.getElementById('board');
+    var rows = table.getElementsByTagName('tr');
+  
+    for (var i = 1; i < rows.length; i++) {
+      var cells = rows[i].getElementsByTagName('td');
+      var rowMatch = false;
+  
+      switch (searchType) {
+        case '1': // idx
+          if (cells[0].textContent.toLowerCase().indexOf(searchInput) > -1) {
+            rowMatch = true;
+          }
+          break;
+        case '2': // title
+          if (cells[1].textContent.toLowerCase().indexOf(searchInput) > -1) {
+            rowMatch = true;
+          }
+          break;
+        case '3': // text
+          if (cells[2].textContent.toLowerCase().indexOf(searchInput) > -1) {
+            rowMatch = true;
+          }
+          break;
+        default:
+          break;
+      }
+  
+      if (rowMatch) {
+        rows[i].style.display = '';
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+  }
+    </script>
+</body>
+</html>
