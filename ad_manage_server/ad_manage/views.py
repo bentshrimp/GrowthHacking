@@ -5,4 +5,4 @@ from .models import Ad, Slot, AdContract
 
 class AdList(View):
     def get(self, request):
-        return render(request, 'index.html', {})
+        return render(request, 'manager_platform.html', {})
