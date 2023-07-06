@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views import View
 
-from .models import Ad
+from .models import Ad, Slot, AdContract, Advertiser
 from django.db.models import F
 
 class HomeView(View):
