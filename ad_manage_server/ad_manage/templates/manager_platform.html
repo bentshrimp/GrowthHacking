@@ -18,10 +18,13 @@
     </div>
     <div class="search">
         <select id="class">
-            <option value="type">검색타입</option>
-            <option value="1">idx</option>
-            <option value="2">title</option>
-            <option value="2">text</option>
+          <option value="type">검색타입</option>
+          <option value="1">AD ID</option>
+          <option value="2">광고주ID</option>
+          <option value="3">광고주 이름</option>
+          <option value="4">계약날짜</option>
+          <option value="5">계약종료날짜</option>
+          <option value="6">타겟링크</option>
         </select>
         <input type="text" class="search_input" placeholder="검색어를 입력하세요">
         <button class="search_button">검색</button>
@@ -41,43 +44,65 @@
           <div class="window-box"></div>
     </div>
           
-    <footer></footer>
+    <footer>
+      <div style=" text-align: center;">
+        <button id="prev-button">이전</button>
+        <button id="page-button"></button>
+        <button id="next-button">다음</button>
+      </div>
+    </footer>
 
 
     <script>
+        var Data;
         // 서버로부터 json 파일 받아오는 코드
         $(document).ready(function() {
+
+          var currentPage = 1; // 현재 페이지 번호
+          var rowsPerPage = 12; // 페이지당 행의 개수
+
+          var pageButton = $('#page-button');
+
+          //페이지 번호 업데이트 함수 
+          function updatePageNumber() {
+          pageButton.text(currentPage);
+        }
+
+        // 초기 페이지 번호 표시
+          updatePageNumber();
+          
           $.ajax({
-            url: 'http://100.96.104.7:8000/adsList/',
+            url: 'http://localhost:8000/adsList/',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
               var board = $('#board');
+              var totalRows = data.length; // 전체 행의 개수
+              var totalPages = Math.ceil(totalRows / rowsPerPage);
+              
+              //특정 페이지의 데이터를 표시하는 함수 
+              function showPage(page) {
+              board.empty();
 
-              // 데이터 배열을 순회하며 행을 추가
-              $.each(data, function(index, item) {
-                var row = $('<tr>');
-                
-                  var idxCell = $('<td>').text(item.id); 
-                row.append(idxCell);
-                
-                var titleCell = $('<td>').text(item.advertiser_id);
-                row.append(titleCell);
-                
-                var textCell = $('<td>').text(item.advertiser_name);
-                row.append(textCell);
-                
-                var exposureCell = $('<td>').text(item.start_date);
-                row.append(exposureCell);
-                
-                var countCell = $('<td>').text(item.end_date);
-                row.append(countCell);
-                
-                var regdateCell = $('<td>').text(item.target_link);
-                row.append(regdateCell);
+              // 데이터 배열을 순회하며 해당 페이지의 행을 추가
+            for (var i = (page - 1) * rowsPerPage; i < page * rowsPerPage; i++) {
+              if (i >= totalRows) {
+              break; // 마지막 페이지에 남은 행이 없으면 종료
+            }
+
+            var item = data[i];
+            var row = $('<tr>');
+            Data = data;
+            var data_elements = [item.id,item.advertiser_id,item.advertiser_name,
+            item.start_date,item.end_date,item.target_link];
+          data_elements.forEach(function(item) {
+            row.append($('<td>').text(item));
+          });
                 
                 var actionCell = $('<td>');
-                var detailBtn = $('<button>').text('상세');
+                var detailBtn = document.createElement('button');
+                detailBtn.textContent = '상세';
+                detailBtn.classList.add(String(item.id));
                 actionCell.append(detailBtn);
                 
                 var editBtn = $('<button>').text('수정');
@@ -89,83 +114,53 @@
                 row.append(actionCell);
                 
                 board.append(row);
-              });
-            },
+              }
+            }
+            // 페이지 이동 함수
+      function goToPage(page) {
+        if (page < 1) {
+          page = 1;
+        } else if (page > totalPages) {
+          page = totalPages;
+        }
+        currentPage = page;
+        showPage(currentPage);
+        updatePagination();
+      }
+
+      // 페이지네이션 업데이트 함수
+      function updatePagination() {
+        var prevButton = $('#prev-button');
+        var nextButton = $('#next-button');
+
+        prevButton.prop('disabled', currentPage === 1);
+        nextButton.prop('disabled', currentPage === totalPages);
+
+        // 이전 버튼 클릭 시 이벤트 핸들러
+        prevButton.off('click').click(function() {
+          goToPage(currentPage - 1);
+          updatePageNumber();
+        });
+
+        // 다음 버튼 클릭 시 이벤트 핸들러
+        nextButton.off('click').click(function() {
+          goToPage(currentPage + 1);
+          updatePageNumber();
+        });
+      }
+
+      // 초기 페이지 표시
+      showPage(currentPage);
+      updatePagination();
+    },
             error: function(error) {
               console.log('Error:', error);
             }
           });
         });
-        //예시
-        var data = [{
-            idx: 1234,
-            title: 1234,
-            text: "김길동",
-            exposure: "2023/06/26 00:00:00",
-            count: "2023/06/26 00:00:00",
-            regdate: "http"
-        },
-        {
-            idx: 5678,
-            title: 5678,
-            text: "고길동",
-            exposure: "2023/06/26 00:00:00",
-            count: "2023/06/26 00:00:00",
-            regdate: "http"
-        }]
-
-        var board = document.getElementById('board');
-
-        // 데이터 배열을 순회하며 행을 추가
-        data.forEach(function(item) {
-        
-          var row = document.createElement('tr');
-          
-          var idxCell = document.createElement('td');
-          idxCell.textContent = item.idx;
-          row.appendChild(idxCell);
-          
-          var titleCell = document.createElement('td');
-          titleCell.textContent = item.title;
-          row.appendChild(titleCell);
-          
-          var textCell = document.createElement('td');
-          textCell.textContent = item.text;
-          row.appendChild(textCell);
-          
-          var exposureCell = document.createElement('td');
-          exposureCell.textContent = item.exposure;
-          row.appendChild(exposureCell);
-          
-          var countCell = document.createElement('td');
-          countCell.textContent = item.count;
-          row.appendChild(countCell);
-          
-          var regdateCell = document.createElement('td');
-          regdateCell.textContent = item.regdate;
-          row.appendChild(regdateCell);
-          
-          var actionCell = document.createElement('td');
-          var detailBtn = document.createElement('button');
-          detailBtn.textContent = '상세';
-          detailBtn.classList.add(String(item.text));
-          actionCell.appendChild(detailBtn);
-          
-          
-          var editBtn = document.createElement('button');
-          editBtn.textContent = '수정';
-          actionCell.appendChild(editBtn);
-          
-          var deleteBtn = document.createElement('button');
-          deleteBtn.textContent = '삭제';
-          actionCell.appendChild(deleteBtn);
-          
-          row.appendChild(actionCell);
-          
-          board.appendChild(row);
-        });
-        data.forEach(function(item){
-          document.querySelector('.' + String(item.text)).addEventListener('click', function() {
+        //상세 버튼 
+        $.each(Data,function(index,item){
+          document.querySelector("." + String(item.id)).addEventListener('click', function() {
             var windowbox = document.querySelector('.window-box');
             var board = document.querySelector("#board");
             board.style.filter = 'blur(2px)';
@@ -177,22 +172,22 @@
             container.classList.add('data-container');
 
             const idxElement = document.createElement('p');
-            idxElement.textContent = `  idx: ${item.idx}`;
+            idxElement.textContent = `  AD ID : ${item.id}`;
 
             const titleElement = document.createElement('h1');
-            titleElement.textContent = data.title;
+            titleElement.textContent = `  광고주ID : ${item.advertiser_id}`;
 
             const textElement = document.createElement('p');
-            textElement.textContent = data.text;
+            textElement.textContent = `  광고주 이름 : ${item.advertiser_name}`;
 
             const exposureElement = document.createElement('p');
-            exposureElement.textContent = ` 노출일시: ${item.exposure}`;
+            exposureElement.textContent = `  계약날짜 : ${item.start_date}`;
 
             const countElement = document.createElement('p');
-            countElement.textContent = `  조회수: ${item.count}`;
+            countElement.textContent = `  계약종료날짜 : ${item.end_date}`;
 
             const regdateElement = document.createElement('p');
-            regdateElement.textContent = `  등록일시: ${item.regdate}`;
+            regdateElement.textContent = `  타겟링크 : ${item.target_link}`;
 
             container.appendChild(idxElement);
             container.appendChild(titleElement);
@@ -204,7 +199,6 @@
             windowbox.appendChild(container);
           });
         });
-        //예시끝
         // 검색 버튼 클릭 시 이벤트 핸들러
         $('.search_button').click(function() {
           var searchType = $('#class').val();
@@ -229,25 +223,12 @@
           rows.each(function() {
             var cells = $(this).find('td');
             var rowMatch = false;
-
-            switch (searchType) {
-              case '1': // idx
-                if (cells.eq(0).text().toLowerCase().indexOf(searchInput) > -1) {
+            for(var i = 1 ; i < 7; i++){
+              if(searchType == String(i)){
+                if (cells.eq(`${i-1}`).text().toLowerCase().indexOf(searchInput) > -1){
                   rowMatch = true;
                 }
-                break;
-              case '2': // title
-                if (cells.eq(1).text().toLowerCase().indexOf(searchInput) > -1) {
-                  rowMatch = true;
-                }
-                break;
-              case '3': // text
-                if (cells.eq(2).text().toLowerCase().indexOf(searchInput) > -1) {
-                  rowMatch = true;
-                }
-                break;
-              default:
-                break;
+              }
             }
 
             if (rowMatch) {
