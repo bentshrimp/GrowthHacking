@@ -74,5 +74,10 @@ class AdsListView(View):
     def put(self, request):
         pass
 
-    def delete(self, request):
-        pass
+    def delete(self, request, ad_id):
+        try:
+            AdContract.objects.get(ad_id=ad_id).delete()
+            Ad.objects.get(id=ad_id).delete()
+            return JsonResponse({"returnValue" : "true"})
+        except:
+            return JsonResponse({"returnValue" : "false"})
