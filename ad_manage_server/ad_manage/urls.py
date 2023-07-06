@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path
-from .views import AdList, AdsList
+from .views import AdListView, AdsListView
 
 
 urlpatterns = [
-    path('adList/', AdList.as_view()),
-    path('adsList/', AdsList.as_view()),
+    path('adList/', AdListView.as_view()),
+    path('adsList/', AdsListView.as_view()),
 ]
