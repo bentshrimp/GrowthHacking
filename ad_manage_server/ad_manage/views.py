@@ -1,20 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
-from .models import Ad, Slot, AdContract, Advertiser
+
+from .models import Ad
 from django.db.models import F
 
+class HomeView(View):
+    def get(self, request) -> HttpResponse:
+        return render(request, "manager_platform.html", {})
 
-class AdList(View):
-    def get(self, request):
-        return render(request, 'manager_platform.html', {})
 
-
-class AdsList(View):
-    # AD ID, advertiser_ID, advertiser_name, start_date, end_date(계약 시작,종료날짜), target_link
-    def get(self, request):
-        data = []
-
+class AdsListView(View):
+    def get(self, request) -> JsonResponse:
         rows = Ad.objects.select_related("adcontract", "adcontract__advertiser").values(
             "id",
             "uri",
@@ -30,8 +27,8 @@ class AdsList(View):
             "adcontract__advertiser__phone",
         )
 
-        for ad in rows:
-            ad_data = {
+        data = [
+            {
                 "id": ad["id"],
                 "advertiser_id": ad["adcontract__advertiser__id"],
                 "advertiser_name": ad["adcontract__advertiser__name"],
@@ -39,11 +36,10 @@ class AdsList(View):
                 "end_date": str(ad["adcontract__end_date"]),
                 "target_link": ad["target_link"],
             }
-            data.append(ad_data)
+            for ad in rows
+        ]
 
-        response = JsonResponse(data, safe=False)
-
-        return response
+        return JsonResponse(data, safe=False)
 
     def post(self, request):
         req = request.POST
