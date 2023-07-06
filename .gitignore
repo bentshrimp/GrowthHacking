@@ -1,6 +1,5 @@
 .vscode
 .vscode/*
-tables
 .DS_Store
 __pycache__
 .envrc

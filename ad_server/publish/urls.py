@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import AdList, AdsList
+from .views import AdList
 
 urlpatterns = [
     path('adList/<int:slot_id>/', AdList.as_view()),
-    path('adsList/', AdsList.as_view()),
 ]

@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static 'manager_platform.css' %}>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <header align="center"><font size="6">AD Manager Platform - AD List</font></header>
+    <div class="buttons">
+        <button class="add">ADD</button>
+        <button class="ad_test">AD TEST</button>
+    </div>
+    <div class="search">
+        <select id="class">
+            <option value="type">검색타입</option>
+            <option value="1">idx</option>
+            <option value="2">title</option>
+            <option value="2">text</option>
+        </select>
+        <input type="text" class="search_input" placeholder="검색어를 입력하세요">
+        <button class="search_button">검색</button>
+    </div>
+    <div class="main">
+        <table id="board">
+            <tr>
+              <th>AD ID</th>
+              <th>광고주ID</th>
+              <th>광고주 이름</th>
+              <th>계약날짜</th>
+              <th>계약종료날짜</th>
+              <th>타겟링크</th>
+              <th>action</th>
+            </tr>
+          </table>
+          <div class="window-box"></div>
+    </div>
+          
+    <footer></footer>
+
+
+    <script>
+        // 서버로부터 json 파일 받아오는 코드
+        $(document).ready(function() {
+          $.ajax({
+            url: 'http://100.96.104.7:8000/adsList/',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              var board = $('#board');
+
+              // 데이터 배열을 순회하며 행을 추가
+              $.each(data, function(index, item) {
+                var row = $('<tr>');
+                
+                  var idxCell = $('<td>').text(item.id); 
+                row.append(idxCell);
+                
+                var titleCell = $('<td>').text(item.advertiser_id);
+                row.append(titleCell);
+                
+                var textCell = $('<td>').text(item.advertiser_name);
+                row.append(textCell);
+                
+                var exposureCell = $('<td>').text(item.start_date);
+                row.append(exposureCell);
+                
+                var countCell = $('<td>').text(item.end_date);
+                row.append(countCell);
+                
+                var regdateCell = $('<td>').text(item.target_link);
+                row.append(regdateCell);
+                
+                var actionCell = $('<td>');
+                var detailBtn = $('<button>').text('상세');
+                actionCell.append(detailBtn);
+                
+                var editBtn = $('<button>').text('수정');
+                actionCell.append(editBtn);
+                
+                var deleteBtn = $('<button>').text('삭제');
+                actionCell.append(deleteBtn);
+                
+                row.append(actionCell);
+                
+                board.append(row);
+              });
+            },
+            error: function(error) {
+              console.log('Error:', error);
+            }
+          });
+        });
+        //예시
+        var data = [{
+            idx: 1234,
+            title: 1234,
+            text: "김길동",
+            exposure: "2023/06/26 00:00:00",
+            count: "2023/06/26 00:00:00",
+            regdate: "http"
+        },
+        {
+            idx: 5678,
+            title: 5678,
+            text: "고길동",
+            exposure: "2023/06/26 00:00:00",
+            count: "2023/06/26 00:00:00",
+            regdate: "http"
+        }]
+
+        var board = document.getElementById('board');
+
+        // 데이터 배열을 순회하며 행을 추가
+        data.forEach(function(item) {
+        
+          var row = document.createElement('tr');
+          
+          var idxCell = document.createElement('td');
+          idxCell.textContent = item.idx;
+          row.appendChild(idxCell);
+          
+          var titleCell = document.createElement('td');
+          titleCell.textContent = item.title;
+          row.appendChild(titleCell);
+          
+          var textCell = document.createElement('td');
+          textCell.textContent = item.text;
+          row.appendChild(textCell);
+          
+          var exposureCell = document.createElement('td');
+          exposureCell.textContent = item.exposure;
+          row.appendChild(exposureCell);
+          
+          var countCell = document.createElement('td');
+          countCell.textContent = item.count;
+          row.appendChild(countCell);
+          
+          var regdateCell = document.createElement('td');
+          regdateCell.textContent = item.regdate;
+          row.appendChild(regdateCell);
+          
+          var actionCell = document.createElement('td');
+          var detailBtn = document.createElement('button');
+          detailBtn.textContent = '상세';
+          detailBtn.classList.add(String(item.text));
+          actionCell.appendChild(detailBtn);
+          
+          
+          var editBtn = document.createElement('button');
+          editBtn.textContent = '수정';
+          actionCell.appendChild(editBtn);
+          
+          var deleteBtn = document.createElement('button');
+          deleteBtn.textContent = '삭제';
+          actionCell.appendChild(deleteBtn);
+          
+          row.appendChild(actionCell);
+          
+          board.appendChild(row);
+        });
+        data.forEach(function(item){
+          document.querySelector('.' + String(item.text)).addEventListener('click', function() {
+            var windowbox = document.querySelector('.window-box');
+            var board = document.querySelector("#board");
+            board.style.filter = 'blur(2px)';
+            windowbox.style.display = 'block';
+            windowbox.style.backgroundColor = 'black';
+            windowbox.style.color = "white";
+            
+            const container = document.createElement('div');
+            container.classList.add('data-container');
+
+            const idxElement = document.createElement('p');
+            idxElement.textContent = `  idx: ${item.idx}`;
+
+            const titleElement = document.createElement('h1');
+            titleElement.textContent = data.title;
+
+            const textElement = document.createElement('p');
+            textElement.textContent = data.text;
+
+            const exposureElement = document.createElement('p');
+            exposureElement.textContent = ` 노출일시: ${item.exposure}`;
+
+            const countElement = document.createElement('p');
+            countElement.textContent = `  조회수: ${item.count}`;
+
+            const regdateElement = document.createElement('p');
+            regdateElement.textContent = `  등록일시: ${item.regdate}`;
+
+            container.appendChild(idxElement);
+            container.appendChild(titleElement);
+            container.appendChild(textElement);
+            container.appendChild(exposureElement);
+            container.appendChild(countElement);
+            container.appendChild(regdateElement);
+
+            windowbox.appendChild(container);
+          });
+        });
+        //예시끝
+        // 검색 버튼 클릭 시 이벤트 핸들러
+        $('.search_button').click(function() {
+          var searchType = $('#class').val();
+          var searchInput = $('.search_input').val().toLowerCase();
+          searchTable(searchType, searchInput);
+        });
+
+        // 검색어 입력란에서 Enter 키 입력 시 이벤트 핸들러
+        $('.search_input').keydown(function(event) {
+          if (event.key === 'Enter') {
+            var searchType = $('#class').val();
+            var searchInput = $('.search_input').val().toLowerCase();
+            searchTable(searchType, searchInput);
+          }
+        });
+
+        // 테이블 검색 기능
+        function searchTable(searchType, searchInput) {
+          var table = $('#board');
+          var rows = table.find('tr');
+
+          rows.each(function() {
+            var cells = $(this).find('td');
+            var rowMatch = false;
+
+            switch (searchType) {
+              case '1': // idx
+                if (cells.eq(0).text().toLowerCase().indexOf(searchInput) > -1) {
+                  rowMatch = true;
+                }
+                break;
+              case '2': // title
+                if (cells.eq(1).text().toLowerCase().indexOf(searchInput) > -1) {
+                  rowMatch = true;
+                }
+                break;
+              case '3': // text
+                if (cells.eq(2).text().toLowerCase().indexOf(searchInput) > -1) {
+                  rowMatch = true;
+                }
+                break;
+              default:
+                break;
+            }
+
+            if (rowMatch) {
+              $(this).show();
+            } else {
+              $(this).hide();
+            }
+          });
+        }
+    </script>
+</body>
+</html>
