@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, QueryDict
 from django.views import View
-from .models import Ad, Slot, AdContract
+from .models import Ad, Slot, AdContract, Advertiser
 from django.db.models import F
 
 class AdList(View):
@@ -49,5 +49,10 @@ class AdsList(View):
     def put(self, request):
         pass
 
-    def delete(self, request):
-        pass
+    def delete(self, request, ad_id):
+        try:
+            AdContract.objects.get(ad_id=ad_id).delete()
+            Ad.objects.get(id=ad_id).delete()
+            return JsonResponse({"returnValue" : "true"})
+        except:
+            return JsonResponse({"returnValue" : "false"})
