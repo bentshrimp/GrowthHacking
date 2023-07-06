@@ -5,7 +5,7 @@ from .models import Ad
 from django.db.models import F
 
 
-class View(View):
+class HomeView(View):
     def get(self, request) -> HttpResponse:
         return render(request, "manager_platform.html", {})
 
