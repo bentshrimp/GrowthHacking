@@ -44,13 +44,32 @@
           <div class="window-box"></div>
     </div>
           
-    <footer></footer>
+    <footer>
+      <div style=" text-align: center;">
+        <button id="prev-button">이전</button>
+        <button id="page-button"></button>
+        <button id="next-button">다음</button>
+      </div>
+    </footer>
 
 
     <script>
         var Data;
         // 서버로부터 json 파일 받아오는 코드
         $(document).ready(function() {
+
+          var currentPage = 1; // 현재 페이지 번호
+          var rowsPerPage = 12; // 페이지당 행의 개수
+
+          var pageButton = $('#page-button');
+
+          //페이지 번호 업데이트 함수 
+          function updatePageNumber() {
+          pageButton.text(currentPage);
+        }
+
+        // 초기 페이지 번호 표시
+          updatePageNumber();
           
           $.ajax({
             url: 'http://localhost:8000/adsList/',
@@ -58,15 +77,27 @@
             dataType: 'json',
             success: function(data) {
               var board = $('#board');
+              var totalRows = data.length; // 전체 행의 개수
+              var totalPages = Math.ceil(totalRows / rowsPerPage);
+              
+              //특정 페이지의 데이터를 표시하는 함수 
+              function showPage(page) {
+              board.empty();
 
-              // 데이터 배열을 순회하며 행을 추가
-              $.each(data, function(index, item) {
-                var row = $('<tr>');
-                Data = data;
-                var data_elements = [item.id, item.advertiser_id , item.advertiser_name , item.start_date , item.end_date , item.target_link]
-                data_elements.forEach(function(item){
-                  row.append($('<td>').text(item));
-                });
+              // 데이터 배열을 순회하며 해당 페이지의 행을 추가
+            for (var i = (page - 1) * rowsPerPage; i < page * rowsPerPage; i++) {
+              if (i >= totalRows) {
+              break; // 마지막 페이지에 남은 행이 없으면 종료
+            }
+
+            var item = data[i];
+            var row = $('<tr>');
+            Data = data;
+            var data_elements = [item.id,item.advertiser_id,item.advertiser_name,
+            item.start_date,item.end_date,item.target_link];
+          data_elements.forEach(function(item) {
+            row.append($('<td>').text(item));
+          });
                 
                 var actionCell = $('<td>');
                 var detailBtn = document.createElement('button');
@@ -83,13 +114,51 @@
                 row.append(actionCell);
                 
                 board.append(row);
-              });
-            },
+              }
+            }
+            // 페이지 이동 함수
+      function goToPage(page) {
+        if (page < 1) {
+          page = 1;
+        } else if (page > totalPages) {
+          page = totalPages;
+        }
+        currentPage = page;
+        showPage(currentPage);
+        updatePagination();
+      }
+
+      // 페이지네이션 업데이트 함수
+      function updatePagination() {
+        var prevButton = $('#prev-button');
+        var nextButton = $('#next-button');
+
+        prevButton.prop('disabled', currentPage === 1);
+        nextButton.prop('disabled', currentPage === totalPages);
+
+        // 이전 버튼 클릭 시 이벤트 핸들러
+        prevButton.off('click').click(function() {
+          goToPage(currentPage - 1);
+          updatePageNumber();
+        });
+
+        // 다음 버튼 클릭 시 이벤트 핸들러
+        nextButton.off('click').click(function() {
+          goToPage(currentPage + 1);
+          updatePageNumber();
+        });
+      }
+
+      // 초기 페이지 표시
+      showPage(currentPage);
+      updatePagination();
+    },
             error: function(error) {
               console.log('Error:', error);
             }
           });
         });
+        //상세 버튼 
         $.each(Data,function(index,item){
           document.querySelector("." + String(item.id)).addEventListener('click', function() {
             var windowbox = document.querySelector('.window-box');
