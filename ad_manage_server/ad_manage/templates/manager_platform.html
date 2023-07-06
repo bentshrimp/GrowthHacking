@@ -48,7 +48,7 @@
         // 서버로부터 json 파일 받아오는 코드
         $(document).ready(function() {
           $.ajax({
-            url: '~~~~~~~~~~~~~~',
+            url: 'http://100.96.104.7:8000/adsList/',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -58,22 +58,22 @@
               $.each(data, function(index, item) {
                 var row = $('<tr>');
                 
-                var idxCell = $('<td>').text(item.idx);
+                  var idxCell = $('<td>').text(item.id); 
                 row.append(idxCell);
                 
-                var titleCell = $('<td>').text(item.title);
+                var titleCell = $('<td>').text(item.advertiser_id);
                 row.append(titleCell);
                 
-                var textCell = $('<td>').text(item.text);
+                var textCell = $('<td>').text(item.advertiser_name);
                 row.append(textCell);
                 
-                var exposureCell = $('<td>').text(item.exposure);
+                var exposureCell = $('<td>').text(item.start_date);
                 row.append(exposureCell);
                 
-                var countCell = $('<td>').text(item.count);
+                var countCell = $('<td>').text(item.end_date);
                 row.append(countCell);
                 
-                var regdateCell = $('<td>').text(item.regdate);
+                var regdateCell = $('<td>').text(item.target_link);
                 row.append(regdateCell);
                 
                 var actionCell = $('<td>');
